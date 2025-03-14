@@ -5,22 +5,35 @@ import Field from '@/components/Field';
 import Checkbox from '@/components/Checkbox';
 
 const SignUp = ({ setIsSignUp }) => {
-    //useState initialization
+    const [formData, setFormData] = useState({
+        email: '',
+        name: '',
+        password: '',
+        confirmPassword: '',
+        agreeEmail: false,
+        conditions: false,
+    });
     
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
-        //handleChange function
+        const {name, value} = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
 
     const handleCheckboxChange = (field) => {
-        //handleCheckboxChange function
+        setFormData({ ...formData, [field]: !formData[field] });
     };
 
     const validateForm = () => {
-        //validateForm function
+        if(!formData.email) return 'Email is expected';
+        if(!formData.name) return 'Name is expected';
+        if(!formData.password) return 'Password is expected';
+        if(formData.password !== formData.confirmPassword) return 'Passwords do not match';
+        if(!formData.conditions) return 'You must agree to the terms and conditions';
+        return null;
     };
 
     const register = async (event) => {
@@ -70,11 +83,63 @@ const SignUp = ({ setIsSignUp }) => {
                 {error && <p className='text-red-500 mb-4'>{error}</p>}
 
                 {/* Email Field */}
+                <Field
+                    className='mb-4.5'
+                    type='email'
+                    name='email'
+                    label='Email'
+                    placeholder='Enter your email'
+                    icon='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                />
                 {/* Name Field */}
+                <Field
+                    className='mb-4.5'
+                    type='text'
+                    name='name'
+                    label='Name'
+                    placeholder='Enter your name'
+                    icon='user'
+                    value={formData.name}
+                    onChange={handleChange}
+                />
                 {/* Password Field */}
+                <Field
+                    className='mb-4.5'
+                    type='password'
+                    name='password'
+                    label='Password'
+                    placeholder='Enter your password'
+                    icon='eye'
+                    value={formData.password}
+                    onChange={handleChange}
+                />
                 {/* Confirm Password Field */}
+                <Field
+                    className='mb-4.5'
+                    type='password'
+                    name='confirmPassword'
+                    label='Confirm password'
+                    placeholder='Re-enter your password'
+                    icon='eye'
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                />
                 {/* Agree Email Checkbox */}
+                <Checkbox
+                    className='mb-4.5'
+                    label='I agree to receive email updates'
+                    checked={formData.agreeEmail}
+                    onChange={() => handleCheckboxChange('agreeEmail')}
+                />
                 {/* Conditions Checkbox */}
+                <Checkbox
+                    className='mb-4.5'
+                    label='I have read and agree to the Terms of Service'
+                    checked={formData.conditions}
+                    onChange={() => handleCheckboxChange('conditions')}
+                />
 
                 <button
                     className='btn-purple btn-shadow w-full h-14'
